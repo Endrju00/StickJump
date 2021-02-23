@@ -30,7 +30,7 @@ class Background(Widget):
         texture.dispatch(self)
 
 
-class TutApp(App):
+class MainApp(App):
     pipes = []
     GRAVITY = Window.height * 0.8
     die_flag = 0
@@ -160,4 +160,4 @@ class TutApp(App):
 
 
 if __name__ == '__main__':
-    TutApp().run()
+    MainApp().run()
