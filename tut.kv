@@ -1,0 +1,50 @@
+#:include pipe.kv
+
+FloatLayout:
+    Background:
+        id: background
+        canvas.before:
+            Rectangle:
+                size: self.size
+                pos: self.pos
+                source: "sky.png"
+
+            Rectangle:
+                size: self.width, 60
+                pos: self.pos[0], self.pos[1]
+                texture: self.floor_texture
+
+    Label:
+        id: score
+        color: "black"
+        size_hint_y: None
+        height: 3*2*root.height/4
+        text: "0"
+        font_size: 40
+
+    Label:
+        id: lifes
+        color: "white"
+        size_hint_y: None
+        height: 60
+        text: "LIFES: 2"
+        font_size: 20
+
+
+    Button:
+        background_normal: "assets/play.png"
+        background_down: "assets/play_click.png"
+        size_hint: None, None
+        size: 150, 40
+        pos: root.center[0] - 150/2, root.center[1]
+        id: start_button
+        on_release:
+            self.disabled = True
+            self.opacity = 0
+            app.start_game()
+    StickMan:
+        source: "runin/1.png"
+        size_hint: None, None
+        size: 182*root.height/5/211, root.height/5
+        pos: -200, 60
+        id: stickman
