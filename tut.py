@@ -17,7 +17,7 @@ class Background(Widget):
         super().__init__(**kwargs)
 
         # Create textures
-        self.floor_texture = Image(source="floor.png").texture
+        self.floor_texture = Image(source="assets/floor.png").texture
         self.floor_texture.wrap = 'repeat'
         self.floor_texture.uvsize = (Window.width / self.floor_texture.width, -1)
 

@@ -31,28 +31,28 @@ class StickMan(Image):
 
     # action
     def jump(self, time_passed):
-        frame = int(self.source[6:7])
+        frame = int(self.source[6+7:7+7])
         if frame >= 7:
-            self.source = 'jumpi/7.png'
+            self.source = 'assets/jumpi/7.png'
         else:
             frame += 1
-            self.source = 'jumpi/{}.png'.format(frame)
+            self.source = 'assets/jumpi/{}.png'.format(frame)
 
     def run(self, time_passed):
-        frame = int(self.source[6:7])
+        frame = int(self.source[6+7:7+7])
         if frame == 9:
             frame = 1
         else:
             frame += 1
-        self.source = 'runin/{}.png'.format(frame)
+        self.source = 'assets/runin/{}.png'.format(frame)
 
     def slide(self, time_passed):
-        frame = int(self.source[6:7])
+        frame = int(self.source[6+7:7+7])
         if frame >= 5:
-            self.source = 'slide/5.png'
+            self.source = 'assets/slide/5.png'
         else:
             frame += 1
-            self.source = 'slide/{}.png'.format(frame)
+            self.source = 'assets/slide/{}.png'.format(frame)
 
     # events
     def on_touch_down(self, touch):

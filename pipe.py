@@ -23,7 +23,7 @@ class Pipe(Widget):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.pipe_body_texture = Image(source="pipe_body.png").texture
+        self.pipe_body_texture = Image(source="assets/pipe_body.png").texture
         self.pipe_body_texture.wrap = 'repeat'
 
     # suit textures
