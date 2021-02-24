@@ -60,6 +60,7 @@ class MainApp(App):
 
         if self.speed <= 1.9:
             self.speed += 0.0002
+        self.GRAVITY = Window.height * 0.8
 
     # checking collisions
     def check_collision(self):

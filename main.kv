@@ -32,11 +32,11 @@ FloatLayout:
 
 
     Button:
-        background_normal: "assets/play.png"
-        background_down: "assets/play_click.png"
-        size_hint: None, None
-        size: 150, 40
-        pos: root.center[0] - 150/2, root.center[1]
+        background_color: (0, 0, 0, 1)
+        text: "PLAY"
+        font_size: 25
+        size_hint: 1/8, 1/13.5
+        pos: root.center[0] - self.size[0]/2, root.center[1]
         id: start_button
         on_release:
             self.disabled = True
