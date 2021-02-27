@@ -10,8 +10,6 @@ from kivy.metrics import sp, dp
 from pipe import Pipe
 from stickman import StickMan
 
-Window.size = (1200, 675)
-
 
 class Background(Widget):
     floor_texture = ObjectProperty(None)
@@ -39,7 +37,7 @@ class MainApp(App):
     die_flag = 0
     game_active = False
     speed = 1
-    floor_height = dp(60)
+    floor_height = Window.height/9
     score = 0
 
     # stickman movement
@@ -60,8 +58,9 @@ class MainApp(App):
 
         self.check_collision()
 
-        # update game speed
+        # if window size change
         self.GRAVITY = Window.height * 0.8
+        self.floor_height = Window.height / 9
 
     def update_score(self):
         self.score += 10
@@ -88,7 +87,7 @@ class MainApp(App):
                 self.root.ids.lifes.text = "GAME OVER"
                 self.game_over()
         if -stickman.size[0] < stickman.x < Window.width/6:
-            stickman.x += 0.5
+            stickman.x += dp(0.5)
 
         for pipe in self.pipes:
             if pipe.collide_widget(stickman):
@@ -134,9 +133,10 @@ class MainApp(App):
 
     # start the game
     def start_game(self):
+        print(self.root.size)
         if not self.game_active:
             stickman = self.root.ids.stickman
-            stickman.pos = (60, self.floor_height)
+            stickman.pos = (dp(60), self.floor_height)
 
             self.game_active = True
             stickman.game_active = True
@@ -153,17 +153,17 @@ class MainApp(App):
 
             for i in range(num_pipes):
                 pipe = Pipe()
-                pipe.pipe_center = choice([((self.root.height - 100) / 4 - 60), ((self.root.height - 100) / 2 + 50), (self.root.height - 100) - 10])
+                pipe.pipe_center = choice([((self.root.height - dp(100)) / 4 - dp(60)), ((self.root.height - dp(100)) / 2 + dp(50)), (self.root.height - dp(100)) - dp(10)])
                 pipe.size_hint = (None, None)
                 pipe.pos = (Window.width + i*distance_between_pipes, self.floor_height)
-                pipe.size = (64, self.root.height - self.floor_height)
+                pipe.size = (dp(64), self.root.height - self.floor_height)
 
                 self.pipes.append(pipe)
                 self.root.add_widget(pipe)
 
     def move_pipes(self, time_passed):
         for pipe in self.pipes:
-            pipe.x -= time_passed * 100 * 6 * self.speed
+            pipe.x -= dp(time_passed * 100 * 6 * self.speed)
 
         num_pipes = 20
         factor = min(self.speed, 1.4)
