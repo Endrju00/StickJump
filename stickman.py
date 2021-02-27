@@ -14,14 +14,14 @@ class StickMan(Image):
 
     # start some action
     def start_run(self):
-        self.frames = Clock.schedule_interval(self.run, 1/40.)
+        self.frames = Clock.schedule_interval(self.run, 1 / 40.)
 
     def start_slide(self):
         self.sliding = 0
-        self.frames = Clock.schedule_interval(self.slide, 1/20.)
+        self.frames = Clock.schedule_interval(self.slide, 1 / 20.)
 
     def start_jump(self):
-        self.frames = Clock.schedule_interval(self.jump, 1/16.)
+        self.frames = Clock.schedule_interval(self.jump, 1 / 16.)
 
     # stop current action
     def stop_current_action(self):
@@ -57,7 +57,8 @@ class StickMan(Image):
     # events
     def on_touch_down(self, touch):
         if self.game_active:
-            if touch.pos[0] > Window.width/2:
+            if touch.pos[0] > Window.width / 2:
+                self.size = (182 * (Window.height / 5 / 211), Window.height / 5)
                 self.stop_current_action()
                 self.start_jump()
                 self.double_jump += 1
@@ -66,7 +67,7 @@ class StickMan(Image):
             else:
                 self.stop_current_action()
                 self.source = 'assets/slide/1.png'
-                self.size = (Window.height/5, 118*(Window.height/5/191))
+                self.size = (Window.height / 5, 118 * (Window.height / 5 / 191))
                 self.start_slide()
 
         super().on_touch_down(touch)
@@ -74,7 +75,7 @@ class StickMan(Image):
     def on_touch_up(self, touch):
         if touch.pos[0] < Window.width / 2:
             self.stop_current_action()
-            self.size = (182*(Window.height/5/211), Window.height/5)
+            self.size = (182 * (Window.height / 5 / 211), Window.height / 5)
             self.start_run()
         else:
             self.size = (182 * (Window.height / 5 / 211), Window.height / 5)

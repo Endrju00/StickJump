@@ -16,19 +16,19 @@ FloatLayout:
 
     Label:
         id: score
-        color: "black"
         size_hint_y: None
         height: 3*2*root.height/4
         text: "0"
-        font_size: 40
+        font_size: sp(40)
+        color: [0, 0, 0, 1]
+
 
     Label:
         id: lifes
-        color: "white"
         size_hint_y: None
-        height: 60
+        height: root.height/9
         text: "LIFES: 2"
-        font_size: 20
+        font_size: sp(20)
 
 
     Button:
