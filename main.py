@@ -10,6 +10,8 @@ from kivy.metrics import sp, dp
 from pipe import Pipe
 from stickman import StickMan
 
+Window.size = (1200, 675)
+
 
 class Background(Widget):
     floor_texture = ObjectProperty(None)
