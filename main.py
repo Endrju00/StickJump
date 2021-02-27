@@ -5,6 +5,7 @@ from kivy.uix.image import Image
 from kivy.core.window import Window
 from kivy.clock import Clock
 from random import choice
+from kivy.metrics import sp, dp
 
 from pipe import Pipe
 from stickman import StickMan
@@ -36,7 +37,8 @@ class MainApp(App):
     die_flag = 0
     game_active = False
     speed = 1
-    floor_height = 60
+    floor_height = dp(60)
+    score = 0
 
     # stickman movement
     def move_stickman(self, time_passed):
@@ -55,25 +57,35 @@ class MainApp(App):
             stickman.velocity = stickman.velocity - self.GRAVITY * time_passed
 
         self.check_collision()
-        if self.root.ids.score.text[0] != "Y":
-            self.root.ids.score.text = str(int(self.root.ids.score.text)+1)
 
-        if self.speed <= 1.9:
-            self.speed += 0.0002
+        # update game speed
         self.GRAVITY = Window.height * 0.8
+
+    def update_score(self):
+        self.score += 10
+        if self.root.ids.score.text[0] != "Y":
+            if self.score > 1000:
+                temp = round(self.score / 1000, 1)
+                self.root.ids.score.text = str(temp) + 'K'
+            else:
+                self.root.ids.score.text = str(self.score)
+
+    def update_speed(self):
+        if self.speed <= 2.5:
+            self.speed += 0.0001
 
     # checking collisions
     def check_collision(self):
         stickman = self.root.ids.stickman
         if stickman.x < -stickman.size[0]:
             if stickman.lifes:
-                stickman.pos = (60, self.floor_height)
+                stickman.pos = (Window.width/6, self.floor_height)
                 stickman.lifes = False
                 self.root.ids.lifes.text = "LIFES: 1"
             else:
                 self.root.ids.lifes.text = "GAME OVER"
                 self.game_over()
-        if -stickman.size[0] < stickman.x < 60:
+        if -stickman.size[0] < stickman.x < Window.width/6:
             stickman.x += 0.5
 
         for pipe in self.pipes:
@@ -99,7 +111,7 @@ class MainApp(App):
         self.root.ids.start_button.disabled = False
         self.root.ids.start_button.opacity = 1
         self.speed = 1
-        self.root.ids.score.text = "YOUR SCORE: {}".format(self.root.ids.score.text)
+        self.root.ids.score.text = "YOUR SCORE: {}".format(self.score)
 
         for pipe in self.pipes:
             self.root.remove_widget(pipe)
@@ -115,6 +127,8 @@ class MainApp(App):
         self.move_stickman(time_passed)
         self.move_pipes(time_passed)
         self.root.ids.background.scroll_textures(time_passed)
+        self.update_score()
+        self.update_speed()
 
     # start the game
     def start_game(self):
@@ -129,6 +143,7 @@ class MainApp(App):
             self.frames = Clock.schedule_interval(self.next_frame, 1/60.)
             self.root.ids.score.text = str(0)
             self.root.ids.lifes.text = "LIFES: 2"
+            self.score = 0
 
             num_pipes = 20
             factor = min(self.speed, 1.4)

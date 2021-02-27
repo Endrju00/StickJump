@@ -7,8 +7,9 @@ from kivy.core.window import Window
 
 class Pipe(Widget):
     # Numeric attributes
+    stickman_size = (182*Window.height/5/211, Window.height/5)
     CAP_SIZE = NumericProperty(Window.height/50)  # Height of pipe_cap.png
-    GAP_SIZE = NumericProperty(Window.height / 3.5 + Window.height / 25)
+    GAP_SIZE = NumericProperty(1.5*stickman_size[1] + Window.height / 25)
 
     pipe_center = NumericProperty(0)
     bottom_body_position = NumericProperty(0)

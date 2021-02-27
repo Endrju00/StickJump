@@ -31,7 +31,7 @@ class StickMan(Image):
 
     # action
     def jump(self, time_passed):
-        frame = int(self.source[6+7:7+7])
+        frame = int(self.source[13:14])
         if frame >= 7:
             self.source = 'assets/jumpi/7.png'
         else:
@@ -39,7 +39,7 @@ class StickMan(Image):
             self.source = 'assets/jumpi/{}.png'.format(frame)
 
     def run(self, time_passed):
-        frame = int(self.source[6+7:7+7])
+        frame = int(self.source[13:14])
         if frame == 9:
             frame = 1
         else:
@@ -47,7 +47,7 @@ class StickMan(Image):
         self.source = 'assets/runin/{}.png'.format(frame)
 
     def slide(self, time_passed):
-        frame = int(self.source[6+7:7+7])
+        frame = int(self.source[13:14])
         if frame >= 5:
             self.source = 'assets/slide/5.png'
         else:
@@ -65,6 +65,7 @@ class StickMan(Image):
                     self.velocity = Window.height * 0.32
             else:
                 self.stop_current_action()
+                self.source = 'assets/slide/1.png'
                 self.size = (Window.height/5, 118*(Window.height/5/191))
                 self.start_slide()
 
