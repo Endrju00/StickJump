@@ -6,19 +6,9 @@ from kivy.core.window import Window
 from kivy.clock import Clock
 from random import choice
 from kivy.metrics import sp, dp
-
-# storage data
-from kivy.storage.jsonstore import JsonStore
-store = JsonStore('highscore.json')
-
-# play music
 from kivy.core.audio import SoundLoader
-# soundtrack = SoundLoader.load('sounds/soundtrack.wav')
-# soundtrack.play()
-# soundtrack.loop = True
-# soundtrack.volume = 0.45
+from kivy.storage.jsonstore import JsonStore
 
-# import from project files
 from pipe import Pipe
 from stickman import StickMan
 
@@ -44,14 +34,24 @@ class Background(Widget):
 
 
 class MainApp(App):
-    pipes = []
-    GRAVITY = Window.height * 0.8
-    die_flag = 0
-    game_active = False
-    speed = 1
-    floor_height = Window.height / 9
-    score = 0
-    soundtrack = SoundLoader.load('sounds/soundtrack.wav')
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.pipes = []
+        self.GRAVITY = Window.height * 0.8
+        self.die_flag = 0
+        self.game_active = False
+        self.speed = 1
+        self.floor_height = Window.height / 9
+        self.score = 0
+
+        # play sound
+        self.soundtrack = SoundLoader.load('sounds/soundtrack.wav')
+        self.soundtrack.play()
+        self.soundtrack.loop = True
+        self.soundtrack.volume = 0.45
+
+        # store data
+        self.store = JsonStore('highscore.json')
 
     # stickman movement
     def move_stickman(self, time_passed):
@@ -126,13 +126,7 @@ class MainApp(App):
         self.root.ids.start_button.opacity = 1
         self.speed = 1
         self.root.ids.score.text = "YOUR SCORE: {}".format(self.score)
-        # save highscore
-        # actual_highscore = store.get('highscore')['score']
-        # if self.score > actual_highscore:
-        #     store.put('highscore', score=self.score)
-        #     self.root.ids.score.text = "NEW HIGHSCORE: {}".format(self.score)
-        # else:
-        #     self.root.ids.score.text = "YOUR SCORE: {}".format(self.score)
+        self.save_highscore()
 
         for pipe in self.pipes:
             self.root.remove_widget(pipe)
@@ -196,15 +190,20 @@ class MainApp(App):
             most_left_pipe.x = Window.width
 
     def mute_sound(self):
-        self.soundtrack.play()
-        self.soundtrack.loop = True
-        self.soundtrack.volume = 0.45
-        # if soundtrack.volume > 0:
-        #     soundtrack.volume = 0
-        #     self.root.ids.mute_button.text = "UNMUTE"
-        # else:
-        #     soundtrack.volume = 0.45
-        #     self.root.ids.mute_button.text = "MUTE"
+        if self.soundtrack.volume > 0:
+            self.soundtrack.volume = 0
+            self.root.ids.mute_button.text = "UNMUTE"
+        else:
+            self.soundtrack.volume = 0.45
+            self.root.ids.mute_button.text = "MUTE"
+
+    def save_highscore(self):
+        actual_highscore = self.store.get('highscore')['score']
+        if self.score > actual_highscore:
+            self.store.put('highscore', score=self.score)
+            self.root.ids.score.text = "NEW HIGHSCORE: {}".format(self.score)
+        else:
+            self.root.ids.score.text = "YOUR SCORE: {}".format(self.score)
 
 
 if __name__ == '__main__':
