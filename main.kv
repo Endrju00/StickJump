@@ -43,6 +43,18 @@ FloatLayout:
 
     Button:
         background_color: (0, 0, 0, 1)
+        text: "QUIT"
+        font_size: sp(25)
+        size_hint: 1/8, 1/13.5
+        pos: root.center[0] - self.size[0]/2, root.center[1] - self.size[1] - dp(20)
+        id: quit_button
+        on_release:
+            self.disabled = True
+            self.opacity = 0
+            app.get_running_app().stop()
+
+    Button:
+        background_color: (0, 0, 0, 1)
         text: "MUTE"
         font_size: sp(15)
         size_hint: None, None
