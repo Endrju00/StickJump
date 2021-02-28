@@ -6,6 +6,9 @@ from kivy.core.window import Window
 from kivy.clock import Clock
 from random import choice
 from kivy.metrics import sp, dp
+from kivy.storage.jsonstore import JsonStore
+
+store = JsonStore('highscore.json')
 
 from pipe import Pipe
 from stickman import StickMan
@@ -64,7 +67,7 @@ class MainApp(App):
 
     def update_score(self):
         self.score += 10
-        if self.root.ids.score.text[0] != "Y":
+        if self.root.ids.score.text[0] != "Y" and self.root.ids.score.text[0] != "N":
             if self.score > 1000:
                 temp = round(self.score / 1000, 1)
                 self.root.ids.score.text = str(temp) + 'K'
@@ -112,7 +115,15 @@ class MainApp(App):
         self.root.ids.start_button.disabled = False
         self.root.ids.start_button.opacity = 1
         self.speed = 1
-        self.root.ids.score.text = "YOUR SCORE: {}".format(self.score)
+
+        # save highscore
+        actual_highscore = store.get('highscore')['score']
+        if self.score > actual_highscore:
+            store.put('highscore', score=self.score)
+            print('elo')
+            self.root.ids.score.text = "NEW HIGHSCORE: {}".format(self.score)
+        else:
+            self.root.ids.score.text = "YOUR SCORE: {}".format(self.score)
 
         for pipe in self.pipes:
             self.root.remove_widget(pipe)
@@ -122,6 +133,8 @@ class MainApp(App):
         stickman.pos = (-2 * stickman.size[1], self.floor_height)
         stickman.lifes = 2
         self.die_flag = 0
+
+
 
     # what to do in next frame
     def next_frame(self, time_passed):
@@ -133,7 +146,6 @@ class MainApp(App):
 
     # start the game
     def start_game(self):
-        print(self.root.size)
         if not self.game_active:
             stickman = self.root.ids.stickman
             stickman.pos = (dp(60), self.floor_height)
@@ -142,7 +154,7 @@ class MainApp(App):
             stickman.game_active = True
             self.pipes = []
 
-            self.frames = Clock.schedule_interval(self.next_frame, 1 / 120.)
+            self.frames = Clock.schedule_interval(self.next_frame, 1 / 60.)
             self.root.ids.score.text = str(0)
             self.root.ids.lifes.text = "LIFES: 2"
             self.score = 0
