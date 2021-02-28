@@ -11,6 +11,7 @@ class StickMan(Image):
     frames = 0
     sliding = NumericProperty(0)
     game_active = BooleanProperty(False)
+    pause = BooleanProperty(False)
 
     # start some action
     def start_run(self):
@@ -56,7 +57,7 @@ class StickMan(Image):
 
     # events
     def on_touch_down(self, touch):
-        if self.game_active:
+        if self.game_active and not self.pause:
             if touch.pos[1] > Window.width / 9:
                 if touch.pos[0] > Window.width / 2:
                     self.size = (182 * (Window.height / 5 / 211), Window.height / 5)
@@ -74,14 +75,15 @@ class StickMan(Image):
         super().on_touch_down(touch)
 
     def on_touch_up(self, touch):
-        if touch.pos[1] > Window.width / 9:
-            if touch.pos[0] < Window.width / 2:
-                self.stop_current_action()
-                self.size = (182 * (Window.height / 5 / 211), Window.height / 5)
-                self.start_run()
-            else:
-                self.size = (182 * (Window.height / 5 / 211), Window.height / 5)
-                self.stop_current_action()
-                self.start_run()
+        if not self.pause:
+            if touch.pos[1] > Window.width / 9:
+                if touch.pos[0] < Window.width / 2:
+                    self.stop_current_action()
+                    self.size = (182 * (Window.height / 5 / 211), Window.height / 5)
+                    self.start_run()
+                else:
+                    self.size = (182 * (Window.height / 5 / 211), Window.height / 5)
+                    self.stop_current_action()
+                    self.start_run()
 
         super().on_touch_up(touch)

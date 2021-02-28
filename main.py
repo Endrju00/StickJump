@@ -5,6 +5,7 @@ from kivy.uix.image import Image
 from kivy.core.window import Window
 from kivy.clock import Clock
 from random import choice
+from time import sleep
 from kivy.metrics import sp, dp
 from kivy.core.audio import SoundLoader
 from kivy.storage.jsonstore import JsonStore
@@ -43,6 +44,7 @@ class MainApp(App):
         self.speed = 1
         self.floor_height = Window.height / 9
         self.score = 0
+        self.pause = False
 
         # play sound
         self.soundtrack = SoundLoader.load('sounds/soundtrack.wav')
@@ -124,9 +126,11 @@ class MainApp(App):
         stickman = self.root.ids.stickman
         self.root.ids.start_button.disabled = False
         self.root.ids.start_button.opacity = 1
+        self.root.ids.pause_button.disabled = True
         self.speed = 1
         self.root.ids.score.text = "YOUR SCORE: {}".format(self.score)
         self.save_highscore()
+
 
         for pipe in self.pipes:
             self.root.remove_widget(pipe)
@@ -153,6 +157,7 @@ class MainApp(App):
 
             self.game_active = True
             stickman.game_active = True
+            self.root.ids.pause_button.disabled = False
             self.pipes = []
 
             self.frames = Clock.schedule_interval(self.next_frame, 1 / 60.)
@@ -204,6 +209,22 @@ class MainApp(App):
             self.root.ids.score.text = "NEW HIGHSCORE: {}".format(self.score)
         else:
             self.root.ids.score.text = "YOUR SCORE: {}".format(self.score)
+
+    def pause_game(self):
+        stickman = self.root.ids.stickman
+        if not self.pause:
+            self.root.ids.pause_button.text = "UNPAUSE"
+            self.root.ids.score.text = "GAME PAUSED"
+            self.frames.cancel()
+            stickman.frames.cancel()
+            self.pause = True
+            stickman.pause = True
+        else:
+            self.pause = False
+            stickman.pause = False
+            self.root.ids.pause_button.text = "PAUSE"
+            self.frames = Clock.schedule_interval(self.next_frame, 1 / 60.)
+            stickman.start_run()
 
 
 if __name__ == '__main__':

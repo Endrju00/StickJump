@@ -52,6 +52,18 @@ FloatLayout:
         on_release:
             app.mute_sound()
 
+    Button:
+        background_color: (0, 0, 0, 1)
+        text: "PAUSE"
+        font_size: sp(15)
+        size_hint: None, None
+        size: dp(100), root.height/9
+        pos: 0, 0
+        id: pause_button
+        disabled: True
+        on_release:
+            app.pause_game()
+
     StickMan:
         source: "assets/runin/1.png"
         size_hint: None, None
