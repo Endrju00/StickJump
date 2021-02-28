@@ -49,8 +49,6 @@ FloatLayout:
         pos: root.center[0] - self.size[0]/2, root.center[1] - self.size[1] - dp(20)
         id: quit_button
         on_release:
-            self.disabled = True
-            self.opacity = 0
             app.get_running_app().stop()
 
     Button:

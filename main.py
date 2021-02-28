@@ -126,6 +126,8 @@ class MainApp(App):
         stickman = self.root.ids.stickman
         self.root.ids.start_button.disabled = False
         self.root.ids.start_button.opacity = 1
+        self.root.ids.quit_button.disabled = False
+        self.root.ids.quit_button.opacity = 1
         self.root.ids.pause_button.disabled = True
         self.speed = 1
         self.root.ids.score.text = "YOUR SCORE: {}".format(self.score)
@@ -158,6 +160,8 @@ class MainApp(App):
             self.game_active = True
             stickman.game_active = True
             self.root.ids.pause_button.disabled = False
+            self.root.ids.quit_button.disabled = True
+            self.root.ids.quit_button.opacity = 0
             self.pipes = []
 
             self.frames = Clock.schedule_interval(self.next_frame, 1 / 60.)
