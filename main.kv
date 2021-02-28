@@ -42,6 +42,18 @@ FloatLayout:
             self.disabled = True
             self.opacity = 0
             app.start_game()
+
+    Button:
+        background_color: (0, 0, 0, 1)
+        text: "MUTE"
+        font_size: dp(10)
+        size_hint: None, None
+        size: dp(50), dp(50)
+        pos: root.width - self.size[0], root.top - self.size[1]
+        id: mute_button
+        on_release:
+            app.mute_sound()
+
     StickMan:
         source: "assets/runin/1.png"
         size_hint: None, None

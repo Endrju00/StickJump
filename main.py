@@ -6,10 +6,19 @@ from kivy.core.window import Window
 from kivy.clock import Clock
 from random import choice
 from kivy.metrics import sp, dp
-from kivy.storage.jsonstore import JsonStore
 
+# storage data
+from kivy.storage.jsonstore import JsonStore
 store = JsonStore('highscore.json')
 
+# play music
+from kivy.core.audio import SoundLoader
+soundtrack = SoundLoader.load('sounds/soundtrack.wav')
+soundtrack.play()
+soundtrack.loop = True
+soundtrack.volume = 0.45
+
+# import from project files
 from pipe import Pipe
 from stickman import StickMan
 
@@ -134,8 +143,6 @@ class MainApp(App):
         stickman.lifes = 2
         self.die_flag = 0
 
-
-
     # what to do in next frame
     def next_frame(self, time_passed):
         self.move_stickman(time_passed)
@@ -187,6 +194,14 @@ class MainApp(App):
         if right_most_x <= Window.width - distance_between_pipes:
             most_left_pipe = self.pipes[pipe_xs.index(min(pipe_xs))]
             most_left_pipe.x = Window.width
+
+    def mute_sound(self):
+        if soundtrack.volume > 0:
+            soundtrack.volume = 0
+            self.root.ids.mute_button.text = "UNMUTE"
+        else:
+            soundtrack.volume = 0.45
+            self.root.ids.mute_button.text = "MUTE"
 
 
 if __name__ == '__main__':
