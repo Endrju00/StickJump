@@ -57,29 +57,31 @@ class StickMan(Image):
     # events
     def on_touch_down(self, touch):
         if self.game_active:
-            if touch.pos[0] > Window.width / 2:
-                self.size = (182 * (Window.height / 5 / 211), Window.height / 5)
-                self.stop_current_action()
-                self.start_jump()
-                self.double_jump += 1
-                if self.double_jump <= 2:
-                    self.velocity = Window.height * 0.32
-            else:
-                self.stop_current_action()
-                self.source = 'assets/slide/1.png'
-                self.size = (Window.height / 5, 118 * (Window.height / 5 / 191))
-                self.start_slide()
+            if touch.pos[1] > Window.width / 9:
+                if touch.pos[0] > Window.width / 2:
+                    self.size = (182 * (Window.height / 5 / 211), Window.height / 5)
+                    self.stop_current_action()
+                    self.start_jump()
+                    self.double_jump += 1
+                    if self.double_jump <= 2:
+                        self.velocity = Window.height * 0.32
+                else:
+                    self.stop_current_action()
+                    self.source = 'assets/slide/1.png'
+                    self.size = (Window.height / 5, 118 * (Window.height / 5 / 191))
+                    self.start_slide()
 
         super().on_touch_down(touch)
 
     def on_touch_up(self, touch):
-        if touch.pos[0] < Window.width / 2:
-            self.stop_current_action()
-            self.size = (182 * (Window.height / 5 / 211), Window.height / 5)
-            self.start_run()
-        else:
-            self.size = (182 * (Window.height / 5 / 211), Window.height / 5)
-            self.stop_current_action()
-            self.start_run()
+        if touch.pos[1] > Window.width / 9:
+            if touch.pos[0] < Window.width / 2:
+                self.stop_current_action()
+                self.size = (182 * (Window.height / 5 / 211), Window.height / 5)
+                self.start_run()
+            else:
+                self.size = (182 * (Window.height / 5 / 211), Window.height / 5)
+                self.stop_current_action()
+                self.start_run()
 
         super().on_touch_up(touch)
