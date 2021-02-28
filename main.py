@@ -13,10 +13,10 @@ store = JsonStore('highscore.json')
 
 # play music
 from kivy.core.audio import SoundLoader
-soundtrack = SoundLoader.load('sounds/soundtrack.wav')
-soundtrack.play()
-soundtrack.loop = True
-soundtrack.volume = 0.45
+# soundtrack = SoundLoader.load('sounds/soundtrack.wav')
+# soundtrack.play()
+# soundtrack.loop = True
+# soundtrack.volume = 0.45
 
 # import from project files
 from pipe import Pipe
@@ -51,6 +51,7 @@ class MainApp(App):
     speed = 1
     floor_height = Window.height / 9
     score = 0
+    soundtrack = SoundLoader.load('sounds/soundtrack.wav')
 
     # stickman movement
     def move_stickman(self, time_passed):
@@ -195,12 +196,15 @@ class MainApp(App):
             most_left_pipe.x = Window.width
 
     def mute_sound(self):
-        if soundtrack.volume > 0:
-            soundtrack.volume = 0
-            self.root.ids.mute_button.text = "UNMUTE"
-        else:
-            soundtrack.volume = 0.45
-            self.root.ids.mute_button.text = "MUTE"
+        self.soundtrack.play()
+        self.soundtrack.loop = True
+        self.soundtrack.volume = 0.45
+        # if soundtrack.volume > 0:
+        #     soundtrack.volume = 0
+        #     self.root.ids.mute_button.text = "UNMUTE"
+        # else:
+        #     soundtrack.volume = 0.45
+        #     self.root.ids.mute_button.text = "MUTE"
 
 
 if __name__ == '__main__':
