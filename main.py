@@ -124,15 +124,14 @@ class MainApp(App):
         self.root.ids.start_button.disabled = False
         self.root.ids.start_button.opacity = 1
         self.speed = 1
-
+        self.root.ids.score.text = "YOUR SCORE: {}".format(self.score)
         # save highscore
-        actual_highscore = store.get('highscore')['score']
-        if self.score > actual_highscore:
-            store.put('highscore', score=self.score)
-            print('elo')
-            self.root.ids.score.text = "NEW HIGHSCORE: {}".format(self.score)
-        else:
-            self.root.ids.score.text = "YOUR SCORE: {}".format(self.score)
+        # actual_highscore = store.get('highscore')['score']
+        # if self.score > actual_highscore:
+        #     store.put('highscore', score=self.score)
+        #     self.root.ids.score.text = "NEW HIGHSCORE: {}".format(self.score)
+        # else:
+        #     self.root.ids.score.text = "YOUR SCORE: {}".format(self.score)
 
         for pipe in self.pipes:
             self.root.remove_widget(pipe)
