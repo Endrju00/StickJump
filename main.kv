@@ -21,6 +21,7 @@ FloatLayout:
         text: "0"
         font_size: sp(40)
         color: [0, 0, 0, 1]
+        opacity: 0
 
     Label:
         id: lifes
@@ -28,6 +29,7 @@ FloatLayout:
         height: root.height/9
         text: "LIFES: 2"
         font_size: sp(20)
+        opacity: 0
 
     Button:
         background_color: (0, 0, 0, 1)
@@ -43,10 +45,32 @@ FloatLayout:
 
     Button:
         background_color: (0, 0, 0, 1)
-        text: "QUIT"
+        text: "SHOP"
         font_size: sp(25)
         size_hint: 1/8, 1/13.5
         pos: root.center[0] - self.size[0]/2, root.center[1] - self.size[1] - dp(20)
+        id: shop_button
+        on_release:
+            app.shop()
+
+    Button:
+        background_color: (0, 0, 0, 1)
+        text: "RETURN"
+        font_size: sp(20)
+        size_hint: 1/8, 1/13.5
+        pos: root.width-self.size[0], root.height/9
+        id: return_button
+        opacity: 0
+        disabled: True
+        on_release:
+            app.return_button()
+
+    Button:
+        background_color: (0, 0, 0, 1)
+        text: "QUIT"
+        font_size: sp(25)
+        size_hint: 1/8, 1/13.5
+        pos: root.center[0] - self.size[0]/2, root.center[1] - 2*self.size[1] - 2*dp(20)
         id: quit_button
         on_release:
             app.get_running_app().stop()

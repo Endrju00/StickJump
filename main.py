@@ -121,24 +121,33 @@ class MainApp(App):
     # game is over
     def game_over(self):
         stickman = self.root.ids.stickman
+
+        # game is not active
         self.game_active = False
         stickman.game_active = False
         stickman = self.root.ids.stickman
+
+        # show buttons
         self.root.ids.start_button.disabled = False
         self.root.ids.start_button.opacity = 1
         self.root.ids.quit_button.disabled = False
         self.root.ids.quit_button.opacity = 1
+        self.root.ids.shop_button.disabled = False
+        self.root.ids.shop_button.opacity = 1
         self.root.ids.pause_button.disabled = True
+
+        # reset variables
         self.speed = 1
         self.root.ids.score.text = "YOUR SCORE: {}".format(self.score)
         self.save_highscore()
 
-
+        # delete pipes
         for pipe in self.pipes:
             self.root.remove_widget(pipe)
         self.frames.cancel()
         stickman.stop_current_action()
 
+        # hide stickman, reset lifes
         stickman.pos = (-2 * stickman.size[1], self.floor_height)
         stickman.lifes = 2
         self.die_flag = 0
@@ -157,22 +166,34 @@ class MainApp(App):
             stickman = self.root.ids.stickman
             stickman.pos = (dp(60), self.floor_height)
 
+            # game is active
             self.game_active = True
             stickman.game_active = True
+
+            # hide buttons
             self.root.ids.pause_button.disabled = False
             self.root.ids.quit_button.disabled = True
             self.root.ids.quit_button.opacity = 0
+            self.root.ids.shop_button.disabled = True
+            self.root.ids.shop_button.opacity = 0
             self.pipes = []
 
+            # start generating frames, set variables
             self.frames = Clock.schedule_interval(self.next_frame, 1 / 60.)
             self.root.ids.score.text = str(0)
             self.root.ids.lifes.text = "LIFES: 2"
             self.score = 0
 
+            # pipes
             num_pipes = 50
             factor = min(self.speed, 1.1)
             distance_between_pipes = Window.width / (num_pipes - 48) * 2 * factor
 
+            # show labels
+            self.root.ids.score.opacity = 1
+            self.root.ids.lifes.opacity = 1
+
+            # generate pipes
             for i in range(num_pipes):
                 pipe = Pipe()
                 pipe.pipe_center = choice([((self.root.height) / 9), ((self.root.height) / 2), (4 * self.root.height) / 5])
@@ -184,6 +205,8 @@ class MainApp(App):
                 self.root.add_widget(pipe)
 
     def move_pipes(self, time_passed):
+
+        # scroll pipes
         for pipe in self.pipes:
             pipe.x -= dp(time_passed * 100 * 6 * self.speed)
 
@@ -229,6 +252,32 @@ class MainApp(App):
             self.root.ids.pause_button.text = "PAUSE"
             self.frames = Clock.schedule_interval(self.next_frame, 1 / 60.)
             stickman.start_run()
+
+    def shop(self):
+        # hide buttons and score label
+        self.root.ids.quit_button.disabled = True
+        self.root.ids.quit_button.opacity = 0
+        self.root.ids.start_button.disabled = True
+        self.root.ids.start_button.opacity = 0
+        self.root.ids.shop_button.disabled = True
+        self.root.ids.shop_button.opacity = 0
+        self.root.ids.score.opacity = 0
+
+        # show return button
+        self.root.ids.return_button.disabled = False
+        self.root.ids.return_button.opacity = 1
+        # show shop menu
+
+    def return_button(self):
+        self.root.ids.quit_button.disabled = False
+        self.root.ids.quit_button.opacity = 1
+        self.root.ids.start_button.disabled = False
+        self.root.ids.start_button.opacity = 1
+        self.root.ids.shop_button.disabled = False
+        self.root.ids.shop_button.opacity = 1
+        self.root.ids.score.opacity = 1
+        self.root.ids.return_button.disabled = True
+        self.root.ids.return_button.opacity = 0
 
 
 if __name__ == '__main__':
