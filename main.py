@@ -13,6 +13,8 @@ from kivy.storage.jsonstore import JsonStore
 from pipe import Pipe
 from stickman import StickMan
 
+Window.size = (1200, 600)
+
 
 class Background(Widget):
     floor_texture = ObjectProperty(None)
@@ -54,6 +56,7 @@ class MainApp(App):
 
         # store data
         self.store = JsonStore('highscore.json')
+        self.skins = self.store.get('skins')['id']
 
     # stickman movement
     def move_stickman(self, time_passed):
@@ -87,8 +90,8 @@ class MainApp(App):
                 self.root.ids.score.text = str(self.score)
 
     def update_speed(self):
-        if self.speed <= 2.5:
-            self.speed += 0.00005
+        if self.speed <= 3.5:
+            self.speed += 0.0001
 
     # checking collisions
     def check_collision(self):
@@ -134,12 +137,14 @@ class MainApp(App):
         self.root.ids.quit_button.opacity = 1
         self.root.ids.shop_button.disabled = False
         self.root.ids.shop_button.opacity = 1
+        self.root.ids.help_button.disabled = False
+        self.root.ids.help_button.opacity = 1
         self.root.ids.pause_button.disabled = True
 
-        # reset variables
-        self.speed = 1
+        # save highscore and points
         self.root.ids.score.text = "YOUR SCORE: {}".format(self.score)
         self.save_highscore()
+        self.save_points()
 
         # delete pipes
         for pipe in self.pipes:
@@ -148,6 +153,7 @@ class MainApp(App):
         stickman.stop_current_action()
 
         # hide stickman, reset lifes
+        self.speed = 1
         stickman.pos = (-2 * stickman.size[1], self.floor_height)
         stickman.lifes = 2
         self.die_flag = 0
@@ -159,6 +165,7 @@ class MainApp(App):
         self.root.ids.background.scroll_textures(time_passed)
         self.update_score()
         self.update_speed()
+        print(Window.size)
 
     # start the game
     def start_game(self):
@@ -176,6 +183,8 @@ class MainApp(App):
             self.root.ids.quit_button.opacity = 0
             self.root.ids.shop_button.disabled = True
             self.root.ids.shop_button.opacity = 0
+            self.root.ids.help_button.disabled = True
+            self.root.ids.help_button.opacity = 0
             self.pipes = []
 
             # start generating frames, set variables
@@ -191,6 +200,7 @@ class MainApp(App):
 
             # show labels
             self.root.ids.score.opacity = 1
+            self.root.ids.highscore.opacity = 0
             self.root.ids.lifes.opacity = 1
 
             # generate pipes
@@ -205,7 +215,6 @@ class MainApp(App):
                 self.root.add_widget(pipe)
 
     def move_pipes(self, time_passed):
-
         # scroll pipes
         for pipe in self.pipes:
             pipe.x -= dp(time_passed * 100 * 6 * self.speed)
@@ -233,9 +242,16 @@ class MainApp(App):
         actual_highscore = self.store.get('highscore')['score']
         if self.score > actual_highscore:
             self.store.put('highscore', score=self.score)
-            self.root.ids.score.text = "NEW HIGHSCORE: {}".format(self.score)
+            self.root.ids.score.text = "NEW HIGH SCORE: {}".format(self.score)
         else:
             self.root.ids.score.text = "YOUR SCORE: {}".format(self.score)
+            self.root.ids.highscore.opacity = 1
+            self.root.ids.highscore.text = "HIGH SCORE: {}".format(actual_highscore)
+
+    def save_points(self):
+        actual_points = self.store.get('coins')['points']
+        actual_points += self.score//1000
+        self.store.put('coins', points=actual_points)
 
     def pause_game(self):
         stickman = self.root.ids.stickman
@@ -261,12 +277,33 @@ class MainApp(App):
         self.root.ids.start_button.opacity = 0
         self.root.ids.shop_button.disabled = True
         self.root.ids.shop_button.opacity = 0
+        self.root.ids.help_button.disabled = True
+        self.root.ids.help_button.opacity = 0
         self.root.ids.score.opacity = 0
+        self.root.ids.highscore.opacity = 0
 
         # show return button
         self.root.ids.return_button.disabled = False
         self.root.ids.return_button.opacity = 1
+
         # show shop menu
+        self.root.ids.coins.opacity = 1
+        coins = self.store.get('coins')['points']
+        self.root.ids.coins.text = "COINS: {}".format(coins)
+        self.update_shop_labels()
+
+        # show buttons
+        self.root.ids.shop0.opacity = 1
+        self.root.ids.shop0.disabled = False
+        self.root.ids.shop0.pos[1] += dp(340)
+
+        self.root.ids.shop1.opacity = 1
+        self.root.ids.shop1.disabled = False
+        self.root.ids.shop1.pos[1] += dp(340)
+
+        self.root.ids.shop2.opacity = 1
+        self.root.ids.shop2.disabled = False
+        self.root.ids.shop2.pos[1] += dp(340)
 
     def return_button(self):
         self.root.ids.quit_button.disabled = False
@@ -275,9 +312,64 @@ class MainApp(App):
         self.root.ids.start_button.opacity = 1
         self.root.ids.shop_button.disabled = False
         self.root.ids.shop_button.opacity = 1
+        self.root.ids.help_button.disabled = False
+        self.root.ids.help_button.opacity = 1
         self.root.ids.score.opacity = 1
+        self.root.ids.highscore.opacity = 1
+
         self.root.ids.return_button.disabled = True
         self.root.ids.return_button.opacity = 0
+
+        if self.root.ids.help_button1.opacity > 0:
+            self.root.ids.help_button1.opacity = 0
+            self.root.ids.help_button1.disabled = True
+
+            self.root.ids.help_button2.opacity = 0
+            self.root.ids.help_button2.disabled = True
+
+        if self.root.ids.coins.opacity > 0:
+            self.root.ids.coins.opacity = 0
+            self.root.ids.shop0.opacity = 0
+            self.root.ids.shop0.disabled = True
+            self.root.ids.shop0.pos[1] -= dp(340)
+
+            self.root.ids.shop1.opacity = 0
+            self.root.ids.shop1.disabled = True
+            self.root.ids.shop1.pos[1] -= dp(340)
+
+            self.root.ids.shop2.opacity = 0
+            self.root.ids.shop2.disabled = True
+            self.root.ids.shop2.pos[1] -= dp(340)
+
+    def choose_or_buy(self, button_id):
+        stickman = self.root.ids.stickman
+        skins = self.skins
+        coins = self.store.get('coins')['points']
+        price = button_id * 50
+        # if u have u can set
+        if self.skins[button_id] == "1":
+            print(button_id)
+            stickman.skin_id = button_id
+            self.store.put('last', id=button_id)
+        else:
+            if coins >= price:
+                # save skin list
+                self.skins = skins[0:button_id] + "1" + skins[button_id+1:]
+                self.store.put('skins', id=self.skins)
+                print(self.skins)
+                # reduce coins
+                coins -= price
+                self.store.put('coins', points=coins)
+                # set skin
+                stickman.skin_id = button_id
+                # change coins number
+                self.root.ids.coins.text = "COINS: {}".format(coins)
+                self.store.put('last', id=button_id)
+        self.update_shop_labels()
+
+    def update_shop_labels(self):
+        self.root.ids.shop1.text = "BLUE - BOUGHT" if self.skins[1] == '1' else "BLUE - 50"
+        self.root.ids.shop2.text = "FADE - BOUGHT" if self.skins[2] == '1' else "FADE - 100"
 
 
 if __name__ == '__main__':

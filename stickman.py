@@ -2,6 +2,7 @@ from kivy.properties import NumericProperty, BooleanProperty
 from kivy.uix.image import Image
 from kivy.clock import Clock, ClockEvent
 from kivy.core.window import Window
+from kivy.storage.jsonstore import JsonStore
 
 
 class StickMan(Image):
@@ -12,6 +13,8 @@ class StickMan(Image):
     sliding = NumericProperty(0)
     game_active = BooleanProperty(False)
     pause = BooleanProperty(False)
+    store = JsonStore('highscore.json')
+    skin_id = NumericProperty(int(store.get('last')['id']))
 
     # start some action
     def start_run(self):
@@ -32,28 +35,28 @@ class StickMan(Image):
 
     # action
     def jump(self, time_passed):
-        frame = int(self.source[13:14])
+        frame = int(self.source[14:15])
         if frame >= 7:
-            self.source = 'assets/jumpi/7.png'
+            self.source = 'assets/jumpi{}/7.png'.format(self.skin_id)
         else:
             frame += 1
-            self.source = 'assets/jumpi/{}.png'.format(frame)
+            self.source = 'assets/jumpi{}/{}.png'.format(self.skin_id, frame)
 
     def run(self, time_passed):
-        frame = int(self.source[13:14])
+        frame = int(self.source[14:15])
         if frame == 9:
             frame = 1
         else:
             frame += 1
-        self.source = 'assets/runin/{}.png'.format(frame)
+        self.source = 'assets/runin{}/{}.png'.format(self.skin_id, frame)
 
     def slide(self, time_passed):
-        frame = int(self.source[13:14])
+        frame = int(self.source[14:15])
         if frame >= 5:
-            self.source = 'assets/slide/5.png'
+            self.source = 'assets/slide{}/5.png'.format(self.skin_id)
         else:
             frame += 1
-            self.source = 'assets/slide/{}.png'.format(frame)
+            self.source = 'assets/slide{}/{}.png'.format(self.skin_id, frame)
 
     # events
     def on_touch_down(self, touch):
@@ -68,7 +71,7 @@ class StickMan(Image):
                         self.velocity = Window.height * 0.32
                 else:
                     self.stop_current_action()
-                    self.source = 'assets/slide/1.png'
+                    self.source = 'assets/slide{}/1.png'.format(self.skin_id)
                     self.size = (Window.height / 5, 118 * (Window.height / 5 / 191))
                     self.start_slide()
 

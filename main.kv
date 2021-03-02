@@ -1,5 +1,6 @@
 #:include pipe.kv
 
+# background, floor
 FloatLayout:
     Background:
         id: background
@@ -14,6 +15,7 @@ FloatLayout:
                 pos: self.pos[0], self.pos[1]
                 texture: self.floor_texture
 
+# Score counter
     Label:
         id: score
         size_hint_y: None
@@ -24,6 +26,16 @@ FloatLayout:
         opacity: 0
 
     Label:
+        id: highscore
+        size_hint_y: None
+        height: 3*2*root.height/4 - dp(80)
+        text: "0"
+        font_size: sp(30)
+        color: [0, 0, 0, 1]
+        opacity: 0
+
+# Life counter
+    Label:
         id: lifes
         size_hint_y: None
         height: root.height/9
@@ -31,6 +43,65 @@ FloatLayout:
         font_size: sp(20)
         opacity: 0
 
+# Coins label
+    Label:
+        id: coins
+        size_hint: None, None
+        font_size: sp(30)
+        pos: root.width - self.size[0] - dp(20), root.height - self.size[1] + dp(20)
+        text: "COINS: "
+        opacity: 0
+        color: [0, 0, 0, 1]
+
+# Menu
+
+# Help
+    Button:
+        id: help_button1
+        text: "HOLD HERE TO SLIDE"
+        font_size: sp(30)
+        size_hint: None, None
+        size: root.width/2, root.height - root.height/9
+        pos: 0, root.height/9
+        opacity: 0
+        disabled: True
+
+    Button:
+        id: help_button2
+        font_size: sp(30)
+        text: "CLICK HERE TO JUMP\nDOUBLE CLICK TO DOUBLE JUMP\nHOLD TO CURL UP"
+        size_hint: None, None
+        size: root.width/2, root.height - root.height/9
+        pos: root.width/2, root.height/9
+        opacity: 0
+        disabled: True
+
+    Button:
+        background_color: (0, 0, 0, 1)
+        text: "HELP"
+        font_size: sp(25)
+        size_hint: 1/8, 1/13.5
+        pos: root.center[0] - self.size[0]/2, root.center[1] - 2*self.size[1] - 2*dp(20)
+        id: help_button
+        on_release:
+            help_button1.opacity = 0.5
+            help_button1.disabled = False
+            help_button2.opacity = 0.5
+            help_button2.disabled = False
+            return_button.opacity = 1
+            return_button.disabled = False
+            start_button.opacity = 0
+            start_button.disabled = True
+            shop_button.opacity = 0
+            shop_button.disabled = True
+            help_button.opacity = 0
+            help_button.disabled = True
+            quit_button.opacity = 0
+            quit_button.disabled = True
+            score.opacity = 0
+            highscore.opacity = 0
+
+# start game
     Button:
         background_color: (0, 0, 0, 1)
         text: "PLAY"
@@ -43,6 +114,7 @@ FloatLayout:
             self.opacity = 0
             app.start_game()
 
+# go to shop
     Button:
         background_color: (0, 0, 0, 1)
         text: "SHOP"
@@ -53,6 +125,7 @@ FloatLayout:
         on_release:
             app.shop()
 
+# go back from shop
     Button:
         background_color: (0, 0, 0, 1)
         text: "RETURN"
@@ -65,16 +138,18 @@ FloatLayout:
         on_release:
             app.return_button()
 
+# quit the game
     Button:
         background_color: (0, 0, 0, 1)
         text: "QUIT"
         font_size: sp(25)
         size_hint: 1/8, 1/13.5
-        pos: root.center[0] - self.size[0]/2, root.center[1] - 2*self.size[1] - 2*dp(20)
+        pos: root.center[0] - self.size[0]/2, root.center[1] - 3*self.size[1] - 3*dp(20)
         id: quit_button
         on_release:
             app.get_running_app().stop()
 
+# mute the sound
     Button:
         background_color: (0, 0, 0, 1)
         text: "MUTE"
@@ -86,6 +161,7 @@ FloatLayout:
         on_release:
             app.mute_sound()
 
+# pause the game
     Button:
         background_color: (0, 0, 0, 1)
         text: "PAUSE"
@@ -98,9 +174,70 @@ FloatLayout:
         on_release:
             app.pause_game()
 
+# Stickman
     StickMan:
-        source: "assets/runin/1.png"
+        source: "assets/runin0/1.png"
         size_hint: None, None
         size: 182*root.height/5/211, root.height/5
         pos: -200, 60
         id: stickman
+
+# Shop
+    Button:
+        id: shop0
+        text: "CLASSIC"
+        font_size: sp(20)
+        color: 0, 0, 0, 1
+        text_size: None, self.height
+        background_normal: 'assets/shop/shop0.png'
+        background_down: 'assets/shop/shop0.png'
+        size_hint: None, None
+        size: dp(147), dp(340)
+        pos: root.width/7, root.height/5 - dp(340)
+        disabled: True
+        opacity: 0
+        on_press:
+            self.pos[1] += dp(20)
+        on_release:
+            self.pos[1] -= dp(20)
+            app.choose_or_buy(0)
+
+    Button:
+        id: shop1
+        text: "BLUE - 50"
+        font_size: sp(20)
+        color: 0, 0, 0, 1
+        text_size: None, self.height
+        background_normal: 'assets/shop/shop1.png'
+        background_down: 'assets/shop/shop1.png'
+        size_hint: None, None
+        size: dp(147), dp(340)
+        pos: root.center[0] - self.size[0]/2, root.height/5 - dp(340)
+        disabled: True
+        opacity: 0
+        on_press:
+            self.pos[1] += dp(20)
+        on_release:
+            self.pos[1] -= dp(20)
+            app.choose_or_buy(1)
+
+    Button:
+        id: shop2
+        text: "FADE - 100"
+        font_size: sp(20)
+        color: 0, 0, 0, 1
+        text_size: None, self.height
+        background_normal: 'assets/shop/shop2.png'
+        background_down: 'assets/shop/shop2.png'
+        size_hint: None, None
+        size: dp(147), dp(340)
+        pos: 6*root.width/7-self.size[0], root.height/5 - dp(340)
+        disabled: True
+        opacity: 0
+        on_press:
+            self.pos[1] += dp(20)
+        on_release:
+            self.pos[1] -= dp(20)
+            app.choose_or_buy(2)
+
+
