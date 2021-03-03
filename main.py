@@ -167,6 +167,7 @@ class MainApp(App):
         self.root.ids.background.scroll_textures(time_passed)
         self.update_score()
         self.update_speed()
+        print(self.speed)
 
     # start the game
     def start_game(self):
