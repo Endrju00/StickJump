@@ -58,6 +58,8 @@ class MainApp(App):
         self.store = JsonStore('highscore.json')
         self.skins = self.store.get('skins')['id']
 
+        self.shop_page = 1
+
     # stickman movement
     def move_stickman(self, time_passed):
         stickman = self.root.ids.stickman
@@ -165,7 +167,6 @@ class MainApp(App):
         self.root.ids.background.scroll_textures(time_passed)
         self.update_score()
         self.update_speed()
-        print(Window.size)
 
     # start the game
     def start_game(self):
@@ -198,9 +199,10 @@ class MainApp(App):
             factor = min(self.speed, 1.1)
             distance_between_pipes = Window.width / (num_pipes - 48) * 2 * factor
 
-            # show labels
+            # show and hide labels
             self.root.ids.score.opacity = 1
             self.root.ids.highscore.opacity = 0
+            self.root.ids.score_coins.opacity = 0
             self.root.ids.lifes.opacity = 1
 
             # generate pipes
@@ -243,10 +245,14 @@ class MainApp(App):
         if self.score > actual_highscore:
             self.store.put('highscore', score=self.score)
             self.root.ids.score.text = "NEW HIGH SCORE: {}".format(self.score)
+            self.root.ids.score_coins.opacity = 1
+            self.root.ids.score_coins.text = "COINS +{}".format(self.score)
         else:
             self.root.ids.score.text = "YOUR SCORE: {}".format(self.score)
             self.root.ids.highscore.opacity = 1
             self.root.ids.highscore.text = "HIGH SCORE: {}".format(actual_highscore)
+            self.root.ids.score_coins.opacity = 1
+            self.root.ids.score_coins.text = "COINS +{}".format(self.score//1000)
 
     def save_points(self):
         actual_points = self.store.get('coins')['points']
@@ -280,6 +286,7 @@ class MainApp(App):
         self.root.ids.help_button.disabled = True
         self.root.ids.help_button.opacity = 0
         self.root.ids.score.opacity = 0
+        self.root.ids.score_coins.opacity = 0
         self.root.ids.highscore.opacity = 0
 
         # show return button
@@ -287,23 +294,33 @@ class MainApp(App):
         self.root.ids.return_button.opacity = 1
 
         # show shop menu
+        self.shop_page = 1
         self.root.ids.coins.opacity = 1
         coins = self.store.get('coins')['points']
         self.root.ids.coins.text = "COINS: {}".format(coins)
         self.update_shop_labels()
 
         # show buttons
+        self.root.ids.right_button.opacity = 1
+        self.root.ids.right_button.disabled = False
+
         self.root.ids.shop0.opacity = 1
         self.root.ids.shop0.disabled = False
-        self.root.ids.shop0.pos[1] += dp(340)
+        self.root.ids.shop0.pos[1] += dp(400)
+        self.root.ids.shop0.background_normal = 'assets/shop/shop0.png'
+        self.root.ids.shop0.background_down = 'assets/shop/shop0.png'
 
         self.root.ids.shop1.opacity = 1
         self.root.ids.shop1.disabled = False
-        self.root.ids.shop1.pos[1] += dp(340)
+        self.root.ids.shop1.pos[1] += dp(400)
+        self.root.ids.shop1.background_normal = 'assets/shop/shop1.png'
+        self.root.ids.shop1.background_down = 'assets/shop/shop1.png'
 
         self.root.ids.shop2.opacity = 1
         self.root.ids.shop2.disabled = False
-        self.root.ids.shop2.pos[1] += dp(340)
+        self.root.ids.shop2.pos[1] += dp(400)
+        self.root.ids.shop2.background_normal = 'assets/shop/shop2.png'
+        self.root.ids.shop2.background_down = 'assets/shop/shop2.png'
 
     def return_button(self):
         self.root.ids.quit_button.disabled = False
@@ -329,47 +346,94 @@ class MainApp(App):
 
         if self.root.ids.coins.opacity > 0:
             self.root.ids.coins.opacity = 0
+            self.root.ids.right_button.opacity = 0
+            self.root.ids.right_button.disabled = True
+            self.root.ids.left_button.opacity = 0
+            self.root.ids.left_button.disabled = True
             self.root.ids.shop0.opacity = 0
             self.root.ids.shop0.disabled = True
-            self.root.ids.shop0.pos[1] -= dp(340)
+            self.root.ids.shop0.pos[1] -= dp(400)
 
             self.root.ids.shop1.opacity = 0
             self.root.ids.shop1.disabled = True
-            self.root.ids.shop1.pos[1] -= dp(340)
+            self.root.ids.shop1.pos[1] -= dp(400)
 
             self.root.ids.shop2.opacity = 0
             self.root.ids.shop2.disabled = True
-            self.root.ids.shop2.pos[1] -= dp(340)
+            self.root.ids.shop2.pos[1] -= dp(400)
 
     def choose_or_buy(self, button_id):
         stickman = self.root.ids.stickman
         skins = self.skins
         coins = self.store.get('coins')['points']
-        price = button_id * 50
+        page = self.shop_page
+        offset = (page - 1) * 3
+        factor = 1 if page == 1 else offset
+        if page > 1:
+            button_id += 1
+        price = button_id * 100 * factor
+        if page > 1:
+            button_id -= 1
+        print(price)
         # if u have u can set
-        if self.skins[button_id] == "1":
-            print(button_id)
-            stickman.skin_id = button_id
+        if self.skins[button_id + offset] == "1":
+            stickman.skin_id = button_id + offset
             self.store.put('last', id=button_id)
         else:
             if coins >= price:
                 # save skin list
-                self.skins = skins[0:button_id] + "1" + skins[button_id+1:]
+                self.skins = skins[0:button_id + offset] + "1" + skins[button_id + offset + 1:]
                 self.store.put('skins', id=self.skins)
                 print(self.skins)
                 # reduce coins
                 coins -= price
                 self.store.put('coins', points=coins)
                 # set skin
-                stickman.skin_id = button_id
+                stickman.skin_id = button_id + offset
                 # change coins number
                 self.root.ids.coins.text = "COINS: {}".format(coins)
-                self.store.put('last', id=button_id)
+                self.store.put('last', id=button_id+offset)
         self.update_shop_labels()
 
     def update_shop_labels(self):
-        self.root.ids.shop1.text = "BLUE - BOUGHT" if self.skins[1] == '1' else "BLUE - 50"
-        self.root.ids.shop2.text = "FADE - BOUGHT" if self.skins[2] == '1' else "FADE - 100"
+        page = self.shop_page
+        offset = (page - 1) * 3
+        if page == 1:
+            self.root.ids.right_button.opacity = 1
+            self.root.ids.right_button.disabled = False
+
+            self.root.ids.left_button.opacity = 0
+            self.root.ids.left_button.disabled = True
+
+            self.root.ids.shop0.text = "CLASSIC"
+            self.root.ids.shop0.background_normal = 'assets/shop/shop0.png'
+            self.root.ids.shop0.background_down = 'assets/shop/shop0.png'
+
+            self.root.ids.shop1.text = "BLUE - BOUGHT" if self.skins[1] == '1' else "BLUE - 100"
+            self.root.ids.shop1.background_normal = 'assets/shop/shop1.png'
+            self.root.ids.shop1.background_down = 'assets/shop/shop1.png'
+
+            self.root.ids.shop2.text = "SILVER - BOUGHT" if self.skins[2] == '1' else "SILVER - 200"
+            self.root.ids.shop2.background_normal = 'assets/shop/shop2.png'
+            self.root.ids.shop2.background_down = 'assets/shop/shop2.png'
+        if page == 2:
+            self.root.ids.left_button.opacity = 1
+            self.root.ids.left_button.disabled = False
+
+            self.root.ids.right_button.opacity = 0
+            self.root.ids.right_button.disabled = True
+
+            self.root.ids.shop0.text = "FADE - BOUGHT" if self.skins[offset] == '1' else "FADE - 300"
+            self.root.ids.shop0.background_normal = 'assets/shop/shop3.png'
+            self.root.ids.shop0.background_down = 'assets/shop/shop3.png'
+
+            self.root.ids.shop1.text = "GOLD - BOUGHT" if self.skins[offset+1] == '1' else "GOLD - 600"
+            self.root.ids.shop1.background_normal = 'assets/shop/shop4.png'
+            self.root.ids.shop1.background_down = 'assets/shop/shop4.png'
+
+            self.root.ids.shop2.text = "DIAMOND - BOUGHT" if self.skins[offset+2] == '1' else "DIAMOND - 900"
+            self.root.ids.shop2.background_normal = 'assets/shop/shop5.png'
+            self.root.ids.shop2.background_down = 'assets/shop/shop5.png'
 
 
 if __name__ == '__main__':

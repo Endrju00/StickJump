@@ -35,28 +35,28 @@ class StickMan(Image):
 
     # action
     def jump(self, time_passed):
-        frame = int(self.source[14:15])
+        frame = int(self.source[23:24])
         if frame >= 7:
-            self.source = 'assets/jumpi{}/7.png'.format(self.skin_id)
+            self.source = 'assets/movement/jumpi{}/7.png'.format(self.skin_id)
         else:
             frame += 1
-            self.source = 'assets/jumpi{}/{}.png'.format(self.skin_id, frame)
+            self.source = 'assets/movement/jumpi{}/{}.png'.format(self.skin_id, frame)
 
     def run(self, time_passed):
-        frame = int(self.source[14:15])
+        frame = int(self.source[23:24])
         if frame == 9:
             frame = 1
         else:
             frame += 1
-        self.source = 'assets/runin{}/{}.png'.format(self.skin_id, frame)
+        self.source = 'assets/movement/runin{}/{}.png'.format(self.skin_id, frame)
 
     def slide(self, time_passed):
-        frame = int(self.source[14:15])
+        frame = int(self.source[23:24])
         if frame >= 5:
-            self.source = 'assets/slide{}/5.png'.format(self.skin_id)
+            self.source = 'assets/movement/slide{}/5.png'.format(self.skin_id)
         else:
             frame += 1
-            self.source = 'assets/slide{}/{}.png'.format(self.skin_id, frame)
+            self.source = 'assets/movement/slide{}/{}.png'.format(self.skin_id, frame)
 
     # events
     def on_touch_down(self, touch):
@@ -71,7 +71,7 @@ class StickMan(Image):
                         self.velocity = Window.height * 0.32
                 else:
                     self.stop_current_action()
-                    self.source = 'assets/slide{}/1.png'.format(self.skin_id)
+                    self.source = 'assets/movement/slide{}/1.png'.format(self.skin_id)
                     self.size = (Window.height / 5, 118 * (Window.height / 5 / 191))
                     self.start_slide()
 
