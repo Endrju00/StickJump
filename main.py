@@ -186,6 +186,8 @@ class MainApp(App):
             self.root.ids.shop_button.opacity = 0
             self.root.ids.help_button.disabled = True
             self.root.ids.help_button.opacity = 0
+            self.root.ids.left_button.disabled = True
+            self.root.ids.right_button.disabled = True
             self.pipes = []
 
             # start generating frames, set variables
@@ -246,7 +248,7 @@ class MainApp(App):
             self.store.put('highscore', score=self.score)
             self.root.ids.score.text = "NEW HIGH SCORE: {}".format(self.score)
             self.root.ids.score_coins.opacity = 1
-            self.root.ids.score_coins.text = "COINS +{}".format(self.score)
+            self.root.ids.score_coins.text = "COINS +{}".format(self.score//1000)
         else:
             self.root.ids.score.text = "YOUR SCORE: {}".format(self.score)
             self.root.ids.highscore.opacity = 1
@@ -303,22 +305,23 @@ class MainApp(App):
         # show buttons
         self.root.ids.right_button.opacity = 1
         self.root.ids.right_button.disabled = False
+        self.root.ids.right_button.pos = self.root.width - self.root.ids.right_button.width - dp(20), self.root.height/2
 
         self.root.ids.shop0.opacity = 1
         self.root.ids.shop0.disabled = False
-        self.root.ids.shop0.pos[1] += dp(400)
+        self.root.ids.shop0.pos[1] += dp(1000)
         self.root.ids.shop0.background_normal = 'assets/shop/shop0.png'
         self.root.ids.shop0.background_down = 'assets/shop/shop0.png'
 
         self.root.ids.shop1.opacity = 1
         self.root.ids.shop1.disabled = False
-        self.root.ids.shop1.pos[1] += dp(400)
+        self.root.ids.shop1.pos[1] += dp(1000)
         self.root.ids.shop1.background_normal = 'assets/shop/shop1.png'
         self.root.ids.shop1.background_down = 'assets/shop/shop1.png'
 
         self.root.ids.shop2.opacity = 1
         self.root.ids.shop2.disabled = False
-        self.root.ids.shop2.pos[1] += dp(400)
+        self.root.ids.shop2.pos[1] += dp(1000)
         self.root.ids.shop2.background_normal = 'assets/shop/shop2.png'
         self.root.ids.shop2.background_down = 'assets/shop/shop2.png'
 
@@ -348,19 +351,21 @@ class MainApp(App):
             self.root.ids.coins.opacity = 0
             self.root.ids.right_button.opacity = 0
             self.root.ids.right_button.disabled = True
+            self.root.ids.right_button.pos = self.root.width, 0
             self.root.ids.left_button.opacity = 0
             self.root.ids.left_button.disabled = True
+            self.root.ids.left_button.pos = self.root.width, 0
             self.root.ids.shop0.opacity = 0
             self.root.ids.shop0.disabled = True
-            self.root.ids.shop0.pos[1] -= dp(400)
+            self.root.ids.shop0.pos[1] -= dp(1000)
 
             self.root.ids.shop1.opacity = 0
             self.root.ids.shop1.disabled = True
-            self.root.ids.shop1.pos[1] -= dp(400)
+            self.root.ids.shop1.pos[1] -= dp(1000)
 
             self.root.ids.shop2.opacity = 0
             self.root.ids.shop2.disabled = True
-            self.root.ids.shop2.pos[1] -= dp(400)
+            self.root.ids.shop2.pos[1] -= dp(1000)
 
     def choose_or_buy(self, button_id):
         stickman = self.root.ids.stickman
