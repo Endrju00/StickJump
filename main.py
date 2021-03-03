@@ -47,7 +47,7 @@ class MainApp(App):
         self.floor_height = Window.height / 9
         self.score = 0
         self.pause = False
-
+        self.icon = 'ico.png'
         # play sound
         self.soundtrack = SoundLoader.load('sounds/soundtrack.wav')
         self.soundtrack.play()
