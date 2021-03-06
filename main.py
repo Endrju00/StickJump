@@ -8,7 +8,6 @@ from random import choice
 from kivy.metrics import sp, dp
 from kivy.core.audio import SoundLoader
 from kivy.storage.jsonstore import JsonStore
-from kivmob import KivMob, TestIds, RewardedListenerInterface
 
 
 from pipe import Pipe
@@ -42,7 +41,7 @@ class MainApp(App):
         self.GRAVITY = Window.height * 0.8
         self.die_flag = 0
         self.game_active = False
-        self.speed = 1
+        self.speed = 1.1
         self.floor_height = Window.height / 9
         self.score = 0
         self.pause = False
@@ -195,9 +194,9 @@ class MainApp(App):
             self.score = 0
 
             # pipes
-            num_pipes = 50
+            num_pipes = 30
             factor = min(self.speed, 1.1)
-            distance_between_pipes = Window.width / (num_pipes - 48) * 2 * factor
+            distance_between_pipes = Window.width / (num_pipes - 28) * 2 * factor
 
             # show and hide labels
             self.root.ids.score.opacity = 1
@@ -208,7 +207,7 @@ class MainApp(App):
             # generate pipes
             for i in range(num_pipes):
                 pipe = Pipe()
-                pipe.pipe_center = choice([((self.root.height) / 9), ((self.root.height) / 2), (6*self.root.height)/7])
+                pipe.pipe_center = choice([((self.root.height) / 9), ((self.root.height) / 2), (5*self.root.height)/6])
                 pipe.size_hint = (None, None)
                 pipe.pos = (Window.width + i * distance_between_pipes, self.floor_height)
                 pipe.size = (dp(64), self.root.height - self.floor_height)
@@ -221,9 +220,9 @@ class MainApp(App):
         for pipe in self.pipes:
             pipe.x -= dp(time_passed * 100 * 6 * self.speed)
 
-        num_pipes = 50
+        num_pipes = 30
         factor = min(self.speed, 1.1)
-        distance_between_pipes = Window.width / (num_pipes - 48) * 2 * factor
+        distance_between_pipes = Window.width / (num_pipes - 28) * 2 * factor
 
         pipe_xs = list(map(lambda pipe: pipe.x, self.pipes))
         right_most_x = max(pipe_xs)

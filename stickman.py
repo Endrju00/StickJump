@@ -61,7 +61,7 @@ class StickMan(Image):
     # events
     def on_touch_down(self, touch):
         if self.game_active and not self.pause:
-            if touch.pos[1] > Window.width / 9:
+            if touch.pos[1] > Window.height/ 9:
                 if touch.pos[0] > Window.width / 2:
                     self.size = (182 * (Window.height / 5 / 211), Window.height / 5)
                     self.stop_current_action()
@@ -79,7 +79,7 @@ class StickMan(Image):
 
     def on_touch_up(self, touch):
         if not self.pause:
-            if touch.pos[1] > Window.width / 9:
+            if touch.pos[1] > Window.height / 9:
                 if touch.pos[0] < Window.width / 2:
                     self.stop_current_action()
                     self.size = (182 * (Window.height / 5 / 211), Window.height / 5)
