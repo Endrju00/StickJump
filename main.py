@@ -9,11 +9,11 @@ from time import sleep
 from kivy.metrics import sp, dp
 from kivy.core.audio import SoundLoader
 from kivy.storage.jsonstore import JsonStore
+from kivmob import KivMob, TestIds, RewardedListenerInterface
+from kivy.uix.screenmanager import ScreenManager
 
 from pipe import Pipe
 from stickman import StickMan
-
-Window.size = (1200, 600)
 
 
 class Background(Widget):
@@ -60,6 +60,13 @@ class MainApp(App):
 
         self.shop_page = 1
 
+    ads = KivMob(TestIds.APP) # put admob id in case u want your app
+
+    def build(self):
+        self.ads.new_banner(TestIds.BANNER, False)
+        self.ads.request_banner()
+        self.ads.show_banner()
+
     # stickman movement
     def move_stickman(self, time_passed):
         stickman = self.root.ids.stickman
@@ -92,8 +99,8 @@ class MainApp(App):
                 self.root.ids.score.text = str(self.score)
 
     def update_speed(self):
-        if self.speed <= 3.5:
-            self.speed += 0.0001
+        if self.speed <= 1.5:
+            self.speed += 0.00007
 
     # checking collisions
     def check_collision(self):
@@ -120,6 +127,7 @@ class MainApp(App):
                     else:
                         stickman.x = pipe.x - stickman.size[0]
                 # top pipe
+                print(stickman.top)
                 if stickman.top > (pipe.pipe_center + pipe.GAP_SIZE / 2.0):
                     stickman.x = pipe.x - stickman.size[0]
 
@@ -167,7 +175,6 @@ class MainApp(App):
         self.root.ids.background.scroll_textures(time_passed)
         self.update_score()
         self.update_speed()
-        print(self.speed)
 
     # start the game
     def start_game(self):
@@ -211,7 +218,7 @@ class MainApp(App):
             # generate pipes
             for i in range(num_pipes):
                 pipe = Pipe()
-                pipe.pipe_center = choice([((self.root.height) / 9), ((self.root.height) / 2), (4 * self.root.height) / 5])
+                pipe.pipe_center = choice([((self.root.height) / 9), ((self.root.height) / 2), (6*self.root.height)/7])
                 pipe.size_hint = (None, None)
                 pipe.pos = (Window.width + i * distance_between_pipes, self.floor_height)
                 pipe.size = (dp(64), self.root.height - self.floor_height)
@@ -299,8 +306,9 @@ class MainApp(App):
         # show shop menu
         self.shop_page = 1
         self.root.ids.coins.opacity = 1
+        self.root.ids.lifes.opacity = 1
         coins = self.store.get('coins')['points']
-        self.root.ids.coins.text = "COINS: {}".format(coins)
+        self.root.ids.lifes.text = "COINS: {}".format(coins)
         self.update_shop_labels()
 
         # show buttons
@@ -397,7 +405,7 @@ class MainApp(App):
                 # set skin
                 stickman.skin_id = button_id + offset
                 # change coins number
-                self.root.ids.coins.text = "COINS: {}".format(coins)
+                self.root.ids.lifes.text = "COINS: {}".format(coins)
                 self.store.put('last', id=button_id+offset)
         self.update_shop_labels()
 
