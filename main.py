@@ -5,12 +5,11 @@ from kivy.uix.image import Image
 from kivy.core.window import Window
 from kivy.clock import Clock
 from random import choice
-from time import sleep
 from kivy.metrics import sp, dp
 from kivy.core.audio import SoundLoader
 from kivy.storage.jsonstore import JsonStore
 from kivmob import KivMob, TestIds, RewardedListenerInterface
-from kivy.uix.screenmanager import ScreenManager
+
 
 from pipe import Pipe
 from stickman import StickMan
@@ -59,13 +58,6 @@ class MainApp(App):
         self.skins = self.store.get('skins')['id']
 
         self.shop_page = 1
-
-    ads = KivMob(TestIds.APP) # put admob id in case u want your app
-
-    def build(self):
-        self.ads.new_banner(TestIds.BANNER, False)
-        self.ads.request_banner()
-        self.ads.show_banner()
 
     # stickman movement
     def move_stickman(self, time_passed):
@@ -118,7 +110,6 @@ class MainApp(App):
 
         for pipe in self.pipes:
             if pipe.collide_widget(stickman):
-
                 # bottom pipe
                 if stickman.y < (pipe.pipe_center - pipe.GAP_SIZE / 2.0):
                     if stickman.x > pipe.x + 3 * pipe.size[0] / 4:
@@ -127,7 +118,6 @@ class MainApp(App):
                     else:
                         stickman.x = pipe.x - stickman.size[0]
                 # top pipe
-                print(stickman.top)
                 if stickman.top > (pipe.pipe_center + pipe.GAP_SIZE / 2.0):
                     stickman.x = pipe.x - stickman.size[0]
 
@@ -388,7 +378,6 @@ class MainApp(App):
         price = button_id * 100 * factor
         if page > 1:
             button_id -= 1
-        print(price)
         # if u have u can set
         if self.skins[button_id + offset] == "1":
             stickman.skin_id = button_id + offset
@@ -398,7 +387,6 @@ class MainApp(App):
                 # save skin list
                 self.skins = skins[0:button_id + offset] + "1" + skins[button_id + offset + 1:]
                 self.store.put('skins', id=self.skins)
-                print(self.skins)
                 # reduce coins
                 coins -= price
                 self.store.put('coins', points=coins)
