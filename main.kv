@@ -20,19 +20,19 @@ FloatLayout:
         id: score
         size_hint_y: None
         height: 3*2*root.height/4 + dp(60)
-        text: "0"
+        text: "WELCOME BACK!"
         font_size: sp(40)
         color: [0, 0, 0, 1]
-        opacity: 0
+        opacity: 1
 
     Label:
         id: highscore
         size_hint_y: None
         height: 3*2*root.height/4 - dp(20)
-        text: "0"
+        text: "LET'S JUMP OVER SOME OBSTACLES"
         font_size: sp(30)
         color: [0, 0, 0, 1]
-        opacity: 0
+        opacity: 1
 
 # Life counter
     Label:
@@ -251,10 +251,11 @@ FloatLayout:
 
     Button:
         id: right_button
-        background_normal: 'assets/right.png'
-        background_down: 'assets/right.png'
+        text: ">"
+        background_color: (0, 0, 0, 1)
+        font_size: sp(20)
         size_hint: None, None
-        size: 150, 150
+        size: dp(35), dp(35)
         pos: -1 *(root.width - self.width - dp(20)), -1* root.height/2
         opacity: 0
         disabled: True
@@ -268,18 +269,14 @@ FloatLayout:
 
     Button:
         id: left_button
-        background_normal: 'assets/left.png'
-        background_down: 'assets/left.png'
+        text: "<"
+        background_color: (0, 0, 0, 1)
+        font_size: sp(20)
         size_hint: None, None
-        size: 150, 150
+        size: dp(35), dp(35)
         pos: -self.width, root.height/2
         opacity: 0
         disabled: True
         on_release:
             app.shop_page -= 1
             app.update_shop_labels()
-
-
-
-
-

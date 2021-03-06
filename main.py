@@ -41,7 +41,7 @@ class MainApp(App):
         self.GRAVITY = Window.height * 0.8
         self.die_flag = 0
         self.game_active = False
-        self.speed = 1.1
+        self.speed = 1.2
         self.floor_height = Window.height / 9
         self.score = 0
         self.pause = False
@@ -81,7 +81,7 @@ class MainApp(App):
         self.floor_height = Window.height / 9
 
     def update_score(self):
-        self.score += 10
+        self.score += int(round(10 ** self.speed, 0))
         if self.root.ids.score.text[0] != "Y" and self.root.ids.score.text[0] != "N":
             if self.score > 1000:
                 temp = round(self.score / 1000, 1)
@@ -90,8 +90,8 @@ class MainApp(App):
                 self.root.ids.score.text = str(self.score)
 
     def update_speed(self):
-        if self.speed <= 1.5:
-            self.speed += 0.00007
+        if self.speed <= 1.46:
+            self.speed += 0.00006
 
     # checking collisions
     def check_collision(self):
@@ -152,7 +152,7 @@ class MainApp(App):
         stickman.stop_current_action()
 
         # hide stickman, reset lifes
-        self.speed = 1
+        self.speed = 1.2
         stickman.pos = (-2 * stickman.size[1], self.floor_height)
         stickman.lifes = 2
         self.die_flag = 0
