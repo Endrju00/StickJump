@@ -1,7 +1,0 @@
-
-*.pyc
-*.xml
-*.iml
-linux.txt
-.buildozer/android/platform/python-for-android/
-*.xml~
