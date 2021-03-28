@@ -19,15 +19,17 @@ Project is created with:
 To run this game on your phone [download .apk](https://drive.google.com/file/d/14ds02l-IrrRRxb8CWhjnUv0T0abNHWqz/view?usp=sharing)
 
 ## Screenshots
-**Menu**
+* **Menu**
 ![](assets/1.jpg)
 
 
-**Game**
+* **Game**
 ![](assets/2.jpg)
+![](assets/5.jpg)
 
 
-**Shop**
+* **Shop**
 ![](assets/3.jpg)
+![](assets/4.jpg)
 
 
