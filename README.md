@@ -29,3 +29,5 @@ To run this game on your phone [download .apk](https://drive.google.com/file/d/1
 
 **Shop**
 ![](assets/3.jpg)
+
+
