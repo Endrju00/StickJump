@@ -1,8 +1,24 @@
 # StickJump
-Game on Android made with Kivy
 
-[Link to .apk file](https://drive.google.com/file/d/14ds02l-IrrRRxb8CWhjnUv0T0abNHWqz/view?usp=sharing)
+## Table of contents
+* [General info](#general-info)
+* [Technologies](#technologies)
+* [Setup](#setup)
+* [Screenshots](#screenshots)
 
+## General info
+This project is a game on Android
+	
+## Technologies
+Project is created with:
+* Python
+* Kivy
+
+	
+## Setup
+To run this game on your phone [download .apk](https://drive.google.com/file/d/14ds02l-IrrRRxb8CWhjnUv0T0abNHWqz/view?usp=sharing)
+
+## Screenshots
 **Menu**
 ![](assets/1.jpg)
 
@@ -13,7 +29,3 @@ Game on Android made with Kivy
 
 **Shop**
 ![](assets/3.jpg)
-
-
-**Gameplay**
-![](assets/StickJump.mp4)
