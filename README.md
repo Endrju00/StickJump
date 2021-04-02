@@ -13,6 +13,7 @@ This project is a game on Android
 Project is created with:
 * Python
 * Kivy
+* Pivot animator
 
 ![](assets/StickJump.gif)
 	
