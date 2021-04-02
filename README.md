@@ -14,6 +14,7 @@ Project is created with:
 * Python
 * Kivy
 
+![](assets/StickJump.gif)
 	
 ## Setup
 To run this game on your phone [download .apk](https://drive.google.com/file/d/14ds02l-IrrRRxb8CWhjnUv0T0abNHWqz/view?usp=sharing)
